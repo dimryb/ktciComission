@@ -1,54 +1,60 @@
 package ru.netology
 
+import calcCommission
 import org.junit.Test
 
 import org.junit.Assert.*
+import ruble
 
 class MainKtTest {
 
     @Test
-//    fun `calculatePrice shouldn't add discount`() {
-    fun calculatePrice_shouldNotAddDiscount() {
-        // arrange
-        val count = 1
-        val price = 100
-        val discount = 10
-        val start = 1_000
-        val level = "gold"
+    fun calcCommission_MirCommissionLow() {
+        val transferAmount = 500 * ruble
+        val cardType= "Мир"
 
-        // act
-        val result = calculatePrice(
-            itemCount = count,
-            itemPrice = price,
-            discount = discount,
-            discountStart = start,
-            userLevel = level
-        )
+        val commission = calcCommission(transferAmount, cardType)
 
-        // assert
-        assertEquals(90, result)
+        assertEquals(20 * ruble, commission)
     }
 
     @Test
-    fun calculatePrice_shouldAddDiscount() {
-        // arrange
-        val count = 1
-        val price = 1_000
-        val discount = 10
-        val start = 100
-        val level = "gold"
+    fun calcCommission_MirCommissionHigh() {
+        val transferAmount = 50_000 * ruble
+        val cardType= "Мир"
 
-        // act
-        val result = calculatePrice(
-            itemCount = count,
-            itemPrice = price,
-            discount = discount,
-            discountStart = start,
-            userLevel = level
-        )
+        val commission = calcCommission(transferAmount, cardType)
 
-        // assert
-        assertEquals(891, result)
+        assertEquals(375 * ruble, commission)
+    }
+
+    @Test
+    fun calcCommission_VkPay() {
+        val transferAmount = 50_000 * ruble
+        val cardType= "VK Pay"
+
+        val commission = calcCommission(transferAmount, cardType)
+
+        assertEquals(0, commission)
+    }
+
+    @Test
+    fun calcCommission_MastercardHigh() {
+        val transferAmount = 50_000 * ruble
+        val cardType= "MasterCard"
+
+        val commission = calcCommission(transferAmount, cardType, totalMonth = 95_000 * ruble)
+
+        assertEquals(320 * ruble, commission)
+    }
+
+    @Test
+    fun calcCommission_MastercardLow() {
+        val transferAmount = 50_000 * ruble
+        val cardType= "MasterCard"
+
+        val commission = calcCommission(transferAmount, cardType, totalMonth = 5_000 * ruble)
+
+        assertEquals(0 * ruble, commission)
     }
 }
-
